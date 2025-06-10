@@ -26,7 +26,7 @@ module.exports = {
                 "@pages": path.resolve(__dirname, "src/pages"),
             };
 
-            webpackConfig.target = 'electron-renderer';
+            // webpackConfig.target = 'electron-renderer';
             return webpackConfig;
         }
     }
