@@ -1,0 +1,19 @@
+@use 'util' as util;
+
+.startBox{
+  @include util.center();
+  width: 30%;
+  height: 20%;
+}
+
+.startIconBox{
+  cursor: pointer;
+  height: 80%;
+  aspect-ratio: 1 / 1;
+  margin: 0 10% 0 10%;
+}
+
+.startIcon{
+  height: 100%;
+  width: 100%;
+}

@@ -1,10 +1,17 @@
 import React from 'react';
 import '@styles/App.scss'
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import Task from "@pages/Task";
 
 export default function App() {
+
     return (
-        <div className="page">
-            <h1 style={{ textAlign: 'center' }}>전체 화면 리액트 앱!</h1>
-        </div>
+        <BrowserRouter>
+            <div className="page">
+                <Routes>
+                    <Route path="/" element={<Task/>} />
+                </Routes>
+            </div>
+        </BrowserRouter>
     );
 }
