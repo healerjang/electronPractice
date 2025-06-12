@@ -1,5 +1,4 @@
-// insertTable.js
-// 데이터 삽입 관련 함수 정의
+
 import { initDb } from './createTable.js';
 
 /**

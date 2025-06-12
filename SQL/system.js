@@ -1,6 +1,6 @@
 // system.js
 // 시스템 관련 데이터 조회/삽입 함수 정의
-import { initDb } from './db.js';
+import { initDb } from './createTable.js';
 import fs from 'fs';
 import path from 'path';
 
