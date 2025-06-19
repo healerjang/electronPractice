@@ -54,7 +54,7 @@ function waitForReactServer(cb) {
 app.whenReady().then(async () => {
     console.log('App ready, waiting for React server...');
     try {
-        // await dropAllTables();
+        await dropAllTables();
         const exists = await isCreateTable();
         if (!exists) {
             console.log('테이블이 없어 생성 시작');
