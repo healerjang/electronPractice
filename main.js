@@ -57,13 +57,13 @@ app.whenReady().then(async () => {
         await dropAllTables();
         const exists = await isCreateTable();
         if (!exists) {
-            console.log('테이블이 없어 생성 시작');
+            console.log('main.js: Start creating table');
             await createAllTables();
         } else {
-            console.log('이미 모든 테이블 존재함');
+            console.log('main.js: All tables already exist');
         }
     } catch (err) {
-        console.error('테이블 초기화 에러:', err);
+        console.error('main.js Table initialization error:', err);
     }
     waitForReactServer(createWindow);
 });

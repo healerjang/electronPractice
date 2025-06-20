@@ -1,12 +1,13 @@
 
 import sqlite3Default from 'sqlite3';
 const sqlite3 = sqlite3Default.verbose();
+import {app} from 'electron';
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
 
-const home = os.homedir();
-const appStorage = path.join(home, '.simpleLabelingApp');
+const home = app.getAppPath();
+const appStorage = path.join(home, 'storage');
 if (!fs.existsSync(appStorage)) {
     fs.mkdirSync(appStorage, { recursive: true });
 }
@@ -17,9 +18,9 @@ export function initDb() {
     const dbPath = path.join(appStorage, 'DB.sqlite');
     dbInstance = new sqlite3.Database(dbPath, err => {
         if (err) {
-            console.error('DB 생성/열기 에러:', err);
+            console.error('DB Open Error:', err);
         } else {
-            console.log('✅ 데이터베이스 생성됨 or 열림');
+            console.log('DB Open Success:');
             dbInstance.run('PRAGMA foreign_keys = ON;');
         }
     });
@@ -99,20 +100,18 @@ const SQL_CREATE_IMAGE_SET = `
     );
 `;
 
-// 각 테이블 생성 함수: Promise 반환, 단일 객체용 행 삽입
 function createSettingTable() {
     const db = initDb();
     return new Promise((resolve, reject) => {
         db.run(SQL_CREATE_SETTING, err => {
             if (err) {
-                console.error('setting 테이블 생성 에러:', err);
+                console.error('setting table setting Error:', err);
                 reject(err);
             } else {
-                console.log('✅ setting 테이블 생성됨');
-                // 단일 객체 행 삽입: settingId = 1
+                console.log('✅ setting table is created');
                 db.run(`INSERT OR IGNORE INTO setting(settingId, key) VALUES (1, NULL);`, insertErr => {
-                    if (insertErr) console.error('setting 기본 행 삽입 에러:', insertErr);
-                    else console.log('✅ setting 기본 행 확인/삽입 완료');
+                    if (insertErr) console.error('insert setting common row Error:', insertErr);
+                    else console.log('insert setting common row success');
                     resolve();
                 });
             }
@@ -125,14 +124,13 @@ function createSystemTable() {
     return new Promise((resolve, reject) => {
         db.run(SQL_CREATE_SYSTEM_TABLE, err => {
             if (err) {
-                console.error('systemTable 생성 에러:', err);
+                console.error('systemTable create Error:', err);
                 reject(err);
             } else {
-                console.log('✅ systemTable 생성됨');
-                // 단일 객체 행 삽입: systemId = 1, settingId = 1
+                console.log('systemTable created');
                 db.run(`INSERT OR IGNORE INTO systemTable(systemId, settingId) VALUES (1, 1);`, insertErr => {
-                    if (insertErr) console.error('systemTable 기본 행 삽입 에러:', insertErr);
-                    else console.log('✅ systemTable 기본 행 확인/삽입 완료');
+                    if (insertErr) console.error('insert systemTable common row Error:', insertErr);
+                    else console.log('insert systemTable common row success');
                     resolve();
                 });
             }
@@ -144,10 +142,10 @@ function createWorkspaceTable() {
     return new Promise((resolve, reject) => {
         db.run(SQL_CREATE_WORKSPACE, err => {
             if (err) {
-                console.error('workspace 생성 에러:', err);
+                console.error('workspace create Error:', err);
                 reject(err);
             } else {
-                console.log('✅ workspace 생성됨');
+                console.log('workspace created');
                 resolve();
             }
         });
@@ -158,10 +156,10 @@ function createStreamTable() {
     return new Promise((resolve, reject) => {
         db.run(SQL_CREATE_STREAM, err => {
             if (err) {
-                console.error('label 생성 에러:', err);
+                console.error('label create Error:', err);
                 reject(err);
             } else {
-                console.log('✅ label 생성됨');
+                console.log('label created');
                 resolve();
             }
         });
@@ -172,10 +170,10 @@ function createLabelTable() {
     return new Promise((resolve, reject) => {
         db.run(SQL_CREATE_LABEL, err => {
             if (err) {
-                console.error('label 생성 에러:', err);
+                console.error('label create Error:', err);
                 reject(err);
             } else {
-                console.log('✅ label 생성됨');
+                console.log('label created');
                 resolve();
             }
         });
@@ -186,10 +184,10 @@ function createImageTable() {
     return new Promise((resolve, reject) => {
         db.run(SQL_CREATE_IMAGE, err => {
             if (err) {
-                console.error('image 생성 에러:', err);
+                console.error('image create Error:', err);
                 reject(err);
             } else {
-                console.log('✅ image 생성됨');
+                console.log('image created');
                 resolve();
             }
         });
@@ -200,10 +198,10 @@ function createSetsTable() {
     return new Promise((resolve, reject) => {
         db.run(SQL_CREATE_SETS, err => {
             if (err) {
-                console.error('sets 생성 에러:', err);
+                console.error('sets create Error:', err);
                 reject(err);
             } else {
-                console.log('✅ sets 생성됨');
+                console.log('sets created');
                 resolve();
             }
         });
@@ -214,10 +212,10 @@ function createImageSetTable() {
     return new Promise((resolve, reject) => {
         db.run(SQL_CREATE_IMAGE_SET, err => {
             if (err) {
-                console.error('image_sets 생성 에러:', err);
+                console.error('image_sets create Error:', err);
                 reject(err);
             } else {
-                console.log('✅ image_sets 생성됨');
+                console.log('image_sets created');
                 resolve();
             }
         });
@@ -228,10 +226,10 @@ function createStreamImageTable() {
     return new Promise((resolve, reject) => {
         db.run(SQL_CREATE_STREAM_IMAGE, err => {
             if (err) {
-                console.error('image_sets 생성 에러:', err);
+                console.error('image_sets create Error:', err);
                 reject(err);
             } else {
-                console.log('✅ image_sets 생성됨');
+                console.log('image_sets created');
                 resolve();
             }
         });
@@ -249,7 +247,7 @@ export function createAllTables() {
         .then(createImageSetTable)
         .then(createStreamImageTable)
         .catch(err => {
-            console.error('테이블 생성 중 에러 발생:', err);
+            console.error('Error occurred while creating table:', err);
             throw err;
         });
 }
@@ -262,7 +260,7 @@ export function isCreateTable() {
         const sql = `SELECT name FROM sqlite_master WHERE type='table' AND name IN (${placeholders})`;
         db.all(sql, tableNames, (err, rows) => {
             if (err) {
-                console.error('테이블 존재 확인 에러:', err);
+                console.error('Table existence check error:', err);
                 reject(err);
             } else {
                 resolve(rows.length === tableNames.length);
@@ -276,10 +274,10 @@ export function closeDb() {
     return new Promise((resolve, reject) => {
         dbInstance.close(err => {
             if (err) {
-                console.error('DB 닫기 에러:', err);
+                console.error('DB close Error:', err);
                 reject(err);
             } else {
-                console.log('✅ DB 닫힘');
+                console.log('DB is closed');
                 dbInstance = null;
                 resolve();
             }
