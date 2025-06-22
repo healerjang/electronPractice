@@ -2,8 +2,13 @@ import React, {useEffect, useState} from 'react';
 import "@styles/Task/WorkspaceNavBar.scss"
 import { MdFirstPage, MdLastPage  } from "react-icons/md";
 import { MdOutlineLibraryAdd } from "react-icons/md";
+import {setAlertMessage} from "../slices/AlertSlice";
+import { useDispatch } from 'react-redux';
+import Alert from "@components/Alert";
 
 const WorkspaceNavBar = () => {
+    const dispatch = useDispatch();
+
     const [width, setWidth] = useState(300);
     const [isOpen, setIsOpen] = useState(true);
     const [value, setValue] = useState('');
@@ -11,16 +16,12 @@ const WorkspaceNavBar = () => {
     const [workspaces, setWorkspaces] = useState([]);
 
     useEffect(() => {
-        if (!window.dbAPI) {
-            console.error('dbAPI가 아직 없음');
-            return;
-        }
         (async () => {
             try {
                 const res = await window.dbAPI.getWorkspaces();
                 setWorkspaces(res.result);
             } catch (e) {
-                console.error('워크스페이스 로드 에러:', e);
+                window.ElectronAPI.logError("WorkspaceNavBar.jsx: workspaces load error, " + e);
             }
         })();
     }, []);
@@ -38,7 +39,7 @@ const WorkspaceNavBar = () => {
     const handleClick = () => {
         const trimmed = value.trim();
         if (!trimmed) return;
-        addWorkspace(trimmed);
+        addWorkspace(trimmed).then(() => {});
         setValue('');
     };
 
@@ -53,13 +54,14 @@ const WorkspaceNavBar = () => {
         try {
             const { success, workspaceNo } = await window.dbAPI.insertWorkspace(name);
             if (success) {
-                setWorkspaces(prev => [...prev, { workspaceNo, workspaceName: name }]);
+                setWorkspaces(prev => [...prev, { workspaceNo: workspaceNo, workspaceName: name }]);
                 setWorkspaceName('');
             } else {
-                console.warn('워크스페이스 삽입 실패');
+                dispatch(setAlertMessage("이미 존재하는 워크스페이스 명입니다."))
+                window.ElectronAPI.logError("WorkspaceNavBar.jsx: fali workspace insert")
             }
         } catch (e) {
-            console.error('addWorkspace 에러:', e);
+            window.ElectronAPI.logError("WorkspaceNavBar.jsx: addWorkspace error, " + e);
         }
     };
 

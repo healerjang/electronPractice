@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@reduxjs/toolkit": "^2.8.2",
     "craco": "^0.0.3",
     "dotenv": "^16.5.0",
     "electron": "^36.4.0",
@@ -23,7 +24,8 @@
     "react-router-dom": "^7.6.2",
     "redux": "^5.0.1",
     "sass": "^1.89.1",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",

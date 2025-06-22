@@ -1,5 +1,6 @@
 
 import { initDb } from './createTable.js';
+import logger from '../util/logger.js'
 
 /**
  * insertWorkspace: 워크스페이스를 삽입
@@ -9,15 +10,13 @@ import { initDb } from './createTable.js';
 export async function insertWorkspace(workspaceName) {
     const db = initDb();
     return new Promise((resolve) => {
-        // systemId는 단일 객체이므로 1로 고정
-        const systemId = 1;
-        const sql = `INSERT INTO workspace(workspaceName, systemId) VALUES (?, ?);`;
-        db.run(sql, [workspaceName, systemId], function(err) {
+        const sql = `INSERT INTO workspace(workspaceName) VALUES (?);`;
+        db.run(sql, [workspaceName], function(err) {
             if (err) {
-                console.error('insertWorkspace 에러:', err);
+                logger.error('Insert Table.js: insertWorkspace error:', err);
                 resolve({ success: false, workspaceNo: null });
             } else {
-                console.log('✅ 워크스페이스 삽입됨, workspaceNo=', this.lastID);
+                logger.info('Insert Table.js: Workspace inserted, workspaceNo=', this.lastID);
                 resolve({ success: true, workspaceNo: this.lastID });
             }
         });

@@ -3,6 +3,7 @@
 import { initDb } from './createTable.js';
 import fs from 'fs';
 import path from 'path';
+import logger from '../util/logger.js'
 
 /**
  * getWorkspaces: 모든 워크스페이스를 조회
@@ -14,7 +15,7 @@ export async function getWorkspaces() {
         const sql = `SELECT workspaceNo, workspaceName FROM workspace;`;
         db.all(sql, [], (err, rows) => {
             if (err) {
-                console.error('getWorkspaces 에러:', err);
+                logger.error('System.js: getWorkspaces Error:', err);
                 reject(err);
             } else {
                 resolve({ result: rows.map(r => ({ workspaceNo: r.workspaceNo, workspaceName: r.workspaceName })) });

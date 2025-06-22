@@ -1,28 +1,27 @@
-
 const { contextBridge, ipcRenderer } = require('electron');
 
-console.log('preload loaded');
+console.log("preload load")
 
-contextBridge.exposeInMainWorld('electronAPI', {
+contextBridge.exposeInMainWorld('ElectronAPI', {
     openFile: () => ipcRenderer.invoke('show-open-dialog'),
+    logDebug: (message) => ipcRenderer.send('logging', 'debug', message),
+    logInfo: (message) => ipcRenderer.send('logging', 'info', message),
+    logWarning: (message) => ipcRenderer.send('logging', 'warn', message),
+    logError: (message) => ipcRenderer.send('logging', 'error', message),
 });
 
 contextBridge.exposeInMainWorld('dbAPI', {
-    // 워크스페이스 조회
     getWorkspaces: async () => {
         try {
             return await ipcRenderer.invoke('getWorkspaces');
         } catch (e) {
-            console.error('preload.getWorkspaces 에러:', e);
             return { result: [] };
         }
     },
-    // 워크스페이스 삽입
     insertWorkspace: async (workspaceName) => {
         try {
             return await ipcRenderer.invoke('insertWorkspace', workspaceName);
         } catch (e) {
-            console.error('preload.insertWorkspace 에러:', e);
             return { success: false, workspaceNo: null };
         }
     },
