@@ -6,7 +6,6 @@ import {useSelector} from "react-redux";
 import Alert from "@components/Alert";
 
 export default function App() {
-    const alertMessage = useSelector(state => state.alerts); // null 또는 JSX
 
     return (
         <>

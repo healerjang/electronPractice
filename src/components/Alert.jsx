@@ -1,19 +1,25 @@
 import React from 'react';
-import {useDispatch} from "react-redux";
-import {setAlertComponent} from "../slices/AlertSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {setAlertMessage} from "../slices/AlertSlice";
+import '@styles/Alert.scss'
 
-const Alert = (message) => {
+const Alert = () => {
     const dispatch = useDispatch();
+    const alertMessage = useSelector(state => state.alerts);
 
     const okClick = () => {
-        dispatch(setAlertComponent(<></>))
+        dispatch(setAlertMessage(""))
     }
 
     return (
-        <div className="alertPage">
-            message
-            <button onClick={okClick}></button>
-        </div>
+        <>
+            {
+                alertMessage === "" ? <></> :
+                    <div className="alertPage">
+                        {alertMessage}
+                        <button onClick={okClick}></button>
+                    </div>
+            }</>
     );
 };
 
