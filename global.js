@@ -17,8 +17,14 @@
  *         workspaceNo: int,
  *         workspaceName: string
  *     }
- * ]| []>} openFile
+ * ]| []>}
  * @property {(workspaceName: string) => Promise<{workspaceNo:int}>}
+ * @property {(workspaceNo: int) => Promise<{ [
+ *     {
+ *         streamNo: int,
+ *         streamName: string
+ *     }
+ * ]| []>}
  */
 /**
  * @type {ElectronAPI}

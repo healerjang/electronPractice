@@ -1,8 +1,59 @@
+@use 'util' as util;
+
+
 .alertPage {
   height: 100vh;
   position: fixed;
   width: 100vw;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(0, 0, 0, 0.22);
+  @include util.center();
+}
+
+.alert{
+  width: 350px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  background-color: #434343;
+  border-radius: 10px;
+  border: #7c7c7c solid 1px;
+  box-shadow: #1c1c1c 0 15px 30px;
+  justify-content: center;
+  position: relative;
+
+  >.text-field{
+    color: white;
+    @include util.center();
+  }
+
+  >.check_button_container{
+    position: absolute;
+    right: 20px;
+    bottom: 10px;
+    height: 26px;
+    width: 52px;
+    background-color: #4e4e4e;
+    border: #8c96ed solid 2px;
+    border-radius: 6px;
+    @include util.center();
+    >.check_button{
+      height: 24px;
+      width: 50px;
+      background-color: #8c96ed;
+      color: white;
+      cursor: pointer;
+      @include util.center();
+      border-radius: 4px;
+    }
+    >.check_button:hover{
+      background-color: #848ddd;
+    }
+  }
+
+  >.check_button_container:hover{
+    border: #848ddd solid 2px;
+  }
 }

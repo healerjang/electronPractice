@@ -7,7 +7,7 @@ import {dropAllTables} from "./SQL/util.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import {insertWorkspace} from "./SQL/insertTable.js";
-import {getWorkspaces} from "./SQL/system.js";
+import {getStreams, getWorkspaces} from "./SQL/system.js";
 import logger from './util/logger.js'
 
 const REACT_URL = process.env.REACT_URL;
@@ -49,7 +49,7 @@ function waitForReactServer(cb) {
 app.whenReady().then(async () => {
     logger.info('Main.js: App ready, waiting for React server...');
     try {
-        await dropAllTables();
+        // await dropAllTables();
         const exists = await isCreateTable();
         if (!exists) {
             logger.info('Main.js: Start creating table');
@@ -80,6 +80,15 @@ ipcMain.handle('insertWorkspace', async (event, workspaceName) => {
     } catch (e) {
         logger.error('Main.js: IPC insertWorkspace error:', e);
         return { success: false, workspaceNo: null };
+    }
+});
+ipcMain.handle('getStreams', async (event, workspaceNo) => {
+    try {
+        logger.debug("Main.js: IPC getStreams started");
+        return await getStreams(workspaceNo);
+    } catch (e) {
+        logger.error('Main.js: IPC getStreams error:', e);
+        return { result: [] };
     }
 });
 //

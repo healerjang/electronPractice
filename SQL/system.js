@@ -23,6 +23,25 @@ export async function getWorkspaces() {
         });
     });
 }
+/**
+ * getStreams: 워크스페이스에 해당하는 모든 스트림을 조회
+ * @param {int} workspaceNo
+ * @returns {Promise<{result: Array<{streamNo: number, streamName: string}>}>}
+ */
+export async function getStreams(workspaceNo) {
+    const db = initDb();
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT streamNo, streamName FROM stream WHERE workspaceNo = ${workspaceNo};`;
+        db.all(sql, [], (err, rows) => {
+            if (err) {
+                logger.error('System.js: getWorkspaces Error:', err);
+                reject(err);
+            } else {
+                resolve({ result: rows.map(r => ({ streamNo: r.streamNo, streamName: r.streamName })) });
+            }
+        });
+    });
+}
 
 /**
  * insertImagesByDir: 주어진 폴더 경로를 재귀 탐색하며 이미지 파일을 workspace에 삽입

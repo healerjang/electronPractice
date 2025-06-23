@@ -1,20 +1,20 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import PropTypes from 'prop-types';
 
-const Workspace = ({ workspaceNo, workspaceName, onClick }) => {
+const Workspace = ({ workspaceNo, workspaceName}) => {
+    const workSpaceClick = (async (workspaceNo) => {
+        try{
+            const res = await window.dbAPI.getStreams(workspaceNo);
+            res.result.forEach((doc) => {
+                window.ElectronAPI.logInfo(doc);
+            })
+        } catch (e) {
+            window.ElectronAPI.logError("Workspace.jsx: streams load error, " + e);
+        }
+    });
+
     return (
-        <div
-            className="workspace-item"
-            data-workspace-no={workspaceNo}
-            onClick={() => {
-                if (onClick) onClick(workspaceNo);
-            }}
-            style={{
-                padding: '8px 12px',
-                cursor: onClick ? 'pointer' : 'default',
-                borderBottom: '1px solid #e0e0e0',
-            }}
-        >
+        <div className="workspace-item" onClick={() => workSpaceClick(workspaceNo)}>
             <span className="workspace-name">{workspaceName}</span>
         </div>
     );
@@ -23,7 +23,6 @@ const Workspace = ({ workspaceNo, workspaceName, onClick }) => {
 Workspace.propTypes = {
     workspaceNo: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     workspaceName: PropTypes.string.isRequired,
-    onClick: PropTypes.func,
 };
 
 export default Workspace;

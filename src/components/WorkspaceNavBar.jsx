@@ -5,11 +5,12 @@ import { MdOutlineLibraryAdd } from "react-icons/md";
 import {setAlertMessage} from "../slices/AlertSlice";
 import { useDispatch } from 'react-redux';
 import Alert from "@components/Alert";
+import Workspace from "@components/Workspace";
 
 const WorkspaceNavBar = () => {
     const dispatch = useDispatch();
 
-    const [width, setWidth] = useState(300);
+    const [width, setWidth] = useState(280);
     const [isOpen, setIsOpen] = useState(true);
     const [value, setValue] = useState('');
     const [workspaceName, setWorkspaceName] = useState('');
@@ -31,7 +32,7 @@ const WorkspaceNavBar = () => {
             setWidth(0);
             setIsOpen(false);
         } else {
-            setWidth(300);
+            setWidth(280);
             setIsOpen(true);
         }
     };
@@ -57,7 +58,7 @@ const WorkspaceNavBar = () => {
                 setWorkspaces(prev => [...prev, { workspaceNo: workspaceNo, workspaceName: name }]);
                 setWorkspaceName('');
             } else {
-                dispatch(setAlertMessage("이미 존재하는 워크스페이스 명입니다."))
+                dispatch(setAlertMessage("이미 존재하는 워크스페이스명입니다."))
                 window.ElectronAPI.logError("WorkspaceNavBar.jsx: fali workspace insert")
             }
         } catch (e) {
@@ -83,6 +84,13 @@ const WorkspaceNavBar = () => {
                     >
                         {<MdOutlineLibraryAdd   className="addIcon"/>}
                     </div>
+                </div>
+                <div className="workspaceContain">
+                    {
+                        workspaces.map((item) => (
+                            <Workspace workspaceName={item.workspaceName} workspaceNo={item.workspaceNo} key={item.workspaceNo}></Workspace>
+                        ))
+                    }
                 </div>
             </nav>
             <div className="dialBtn" onClick={handleToggle} style={{left:`${width}px`}}>

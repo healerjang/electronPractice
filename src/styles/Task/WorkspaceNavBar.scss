@@ -4,7 +4,8 @@ nav{
   height: 100%;
   transition: width 0.3s ease;
   position: relative;
-  border-right: solid 2px #7c7c7c;
+  background-color: #454545;
+  overflow: hidden;
 }
 
 .dialBtn {
@@ -15,20 +16,17 @@ nav{
   top: 20px;
   @include util.center();
   transition: left 0.3s ease;
-  border: solid 2px #7c7c7c;
+  background-color: #8c96ed;
   border-radius: 0 5px 5px 0;
 }
 
-.dialBtn:hover {
-  border: solid 2px #515151;
-}
 .dialBtnIcon{
   height: 100%;
   width: 100%;
-  color: #7c7c7c;
+  color: #ffffff;
 }
-.dialBtnIcon:hover{
-  color: #515151;
+.dialBtn:hover{
+  background-color: #848ddd;
 }
 
 .addWorkspace {
@@ -43,7 +41,6 @@ nav{
   .addWorkspaceInput {
     height: 30px;
     padding: 0 8px;
-    border: solid 2px #000000;
     font-size: 14px;
     width: 60%;
     &:focus {
@@ -61,10 +58,16 @@ nav{
     .addIcon{
       height: 100%;
       width: 100%;
-      color: #7c7c7c;
+      color: #8c96ed;
       &:hover {
-        color: #515151;
+        color: #848ddd;
       }
     }
   }
+}
+
+.workspaceContain{
+  @include util.center();
+  flex-direction: column;
+  margin-top: 50px;
 }
