@@ -4,7 +4,6 @@ import { MdFirstPage, MdLastPage  } from "react-icons/md";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 import {setAlertMessage} from "../slices/AlertSlice";
 import { useDispatch } from 'react-redux';
-import Alert from "@components/Alert";
 import Workspace from "@components/Workspace";
 
 const WorkspaceNavBar = () => {
@@ -53,14 +52,19 @@ const WorkspaceNavBar = () => {
     const addWorkspace = async (name) => {
         if (!name) return;
         try {
-            const { success, workspaceNo } = await window.dbAPI.insertWorkspace(name);
-            if (success) {
-                setWorkspaces(prev => [...prev, { workspaceNo: workspaceNo, workspaceName: name }]);
-                setWorkspaceName('');
-            } else {
-                dispatch(setAlertMessage("이미 존재하는 워크스페이스명입니다."))
-                window.ElectronAPI.logError("WorkspaceNavBar.jsx: fali workspace insert")
-            }
+            window.dbAPI.insertWorkspace(name).then(({success, workspaceNo}) => {
+                if (success){
+                    setWorkspaces(prev => [...prev, { workspaceNo: workspaceNo, workspaceName: name }]);
+                    setWorkspaceName('');
+                    window.ElectronAPI.logDebug("WorkspaceNavBar.jsx: workspace insert workspaceNo=" + workspaceNo);
+                    window.dbAPI.insertStream("default", workspaceNo).then((result) => {
+                        window.ElectronAPI.logDebug("WorkspaceNavBar.jsx: stream insert streamNo=" + result.streamNo);
+                    });
+                } else {
+                    dispatch(setAlertMessage("이미 존재하는 워크스페이스명입니다."))
+                    window.ElectronAPI.logError("WorkspaceNavBar.jsx: fali workspace insert")
+                }
+            })
         } catch (e) {
             window.ElectronAPI.logError("WorkspaceNavBar.jsx: addWorkspace error, " + e);
         }

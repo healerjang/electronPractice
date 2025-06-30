@@ -43,57 +43,44 @@ const SQL_CREATE_ATIS = `
         cellID TEXT PRIMARY KEY,
         productLine INTEGER NOT NULL,
         lotNo TEXT NOT NULL,
-        date datetime NOT NULL,
-        imagePath TEXT NOT NULL
+        date datetime NOT NULL
     );
 `;
 const SQL_CREATE_IMAGE_TYPE = `
-    CREATE TABLE IF NOT EXISTS imageType (
+    CREATE TABLE IF NOT EXISTS image_type (
         imageTypeNo INTEGER PRIMARY KEY,
         imageTypeName TEXT NOT NULL
     );
 `
-const SQL_CREATE_LAST_JUDGE = `
-    CREATE TABLE IF NOT EXISTS lastJudge (
-        cellID TEXT NOT NULL,
-        imageTypeNo INTEGER NOT NULL,
-        lastJudge INTEGER NOT NULL,
-        aiJudge INTEGER NOT NULL,
-        PRIMARY KEY(cellID, imageTypeNO),
-        FOREIGN KEY(imageTypeNO) REFERENCES imageType(imageTypeNo) ON DELETE CASCADE,
-        FOREIGN KEY(cellID) REFERENCES atis(cellID) ON DELETE CASCADE
-    );
-`;
 const SQL_CREATE_IMAGE = `
     CREATE TABLE IF NOT EXISTS image (
         imageNo INTEGER PRIMARY KEY AUTOINCREMENT,
         labelNo INTEGER UNIQUE,
-        cellID TEXT NOT NULL,
         imageTypeNo INTEGER NOT NULL,
+        lastJudge INTEGER,
+        aiJudge INTEGER,
+        imagePath TEXT,
+        cellID TEXT,
         FOREIGN KEY(labelNo) REFERENCES label(labelNo) ON DELETE SET NULL,
-        FOREIGN KEY(cellID) REFERENCES atis(cellID) ON DELETE CASCADE,
-        FOREIGN KEY(imageTypeNO) REFERENCES imageType(imageTypeNo) ON DELETE CASCADE
+        FOREIGN KEY(cellID) REFERENCES atis(cellID) ON Delete CASCADE,
+        FOREIGN KEY(imageTypeNo) REFERENCES image_type(imageTypeNo) ON DELETE CASCADE
     );
 `;
-
 const SQL_CREATE_WORKSPACE = `
     CREATE TABLE IF NOT EXISTS workspace (
         workspaceNo INTEGER PRIMARY KEY AUTOINCREMENT,
         workspaceName TEXT NOT NULL UNIQUE
     );
 `;
-
 const SQL_CREATE_STREAM = `
     CREATE TABLE IF NOT EXISTS stream (
         streamNo INTEGER PRIMARY KEY AUTOINCREMENT,
-        streamName TEXT NOT NULL UNIQUE,
+        streamName TEXT NOT NULL,
         workspaceNo INTEGER NOT NULL,
-        imageTypeNo INTEGER NOT NULL,
-        FOREIGN KEY(workspaceNo) REFERENCES workspace(workspaceNo) ON DELETE CASCADE,
-        FOREIGN KEY(imageTypeNO) REFERENCES imageType(imageTypeNo) ON DELETE CASCADE
+        UNIQUE(streamName, workspaceNo),
+        FOREIGN KEY(workspaceNo) REFERENCES workspace(workspaceNo) ON DELETE CASCADE
     );
 `;
-
 const SQL_CREATE_LABEL = `
     CREATE TABLE IF NOT EXISTS label (
         labelNo INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -185,29 +172,14 @@ function runAsync(db, sql, params=[]) {
         });
     });
 }
-
 export async function createImageTypeTable() {
     const db = initDb();
     await runAsync(db, SQL_CREATE_IMAGE_TYPE);
     const insertData = ["BlueTool", "CA(TOP)", "AN(TOP)", "CA(BOT)", "AN(BOT)"];
     for (const name of insertData) {
-        await runAsync(db, 'INSERT OR IGNORE INTO imageType(imageTypeName) VALUES (?);', [name]);
+        await runAsync(db, 'INSERT OR IGNORE INTO image_type(imageTypeName) VALUES (?);', [name]);
     }
     logger.debug('Create Table.js: insert data into imageType success');
-}
-function createLastJudgeTable() {
-    const db = initDb();
-    return new Promise((resolve, reject) => {
-        db.run(SQL_CREATE_LAST_JUDGE, err => {
-            if (err) {
-                logger.error('Create Table.js: last judge create Error:', err);
-                reject(err);
-            } else {
-                logger.info('Create Table.js: last judge created');
-                resolve();
-            }
-        });
-    })
 }
 function createWorkspaceTable() {
     const db = initDb();
@@ -313,7 +285,6 @@ export function createAllTables() {
         .then(createSystemTable)
         .then(createAtisTable)
         .then(createImageTypeTable)
-        .then(createLastJudgeTable)
         .then(createWorkspaceTable)
         .then(createStreamTable)
         .then(createImageTable)

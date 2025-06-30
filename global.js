@@ -25,6 +25,7 @@
  *         streamName: string
  *     }
  * ]| []>}
+ * @property {streamName: string, workspaceNo: int} => Promise<{streamNo:int}>
  */
 /**
  * @type {ElectronAPI}

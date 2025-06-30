@@ -32,6 +32,13 @@ contextBridge.exposeInMainWorld('dbAPI', {
             return { result: [] };
         }
     },
+    insertStream: async (streamName, workspaceNo) => {
+        try {
+            return await ipcRenderer.invoke('insertStream', streamName, workspaceNo);
+        } catch (e) {
+            return { success: false, workspaceNo: null };
+        }
+    }
     // // 이미지 삽입
     // insertImage: async (imagePath, workspaceNo) => {
     //     try {

@@ -6,6 +6,7 @@ nav{
   position: relative;
   background-color: #454545;
   overflow: hidden;
+  border-top: #1c1c1c solid 1px;
 }
 
 .dialBtn {
@@ -13,7 +14,7 @@ nav{
   width: 30px;
   cursor: pointer;
   position: absolute;
-  top: 20px;
+  top: 61px;
   @include util.center();
   transition: left 0.3s ease;
   background-color: #8c96ed;
@@ -32,7 +33,7 @@ nav{
 .addWorkspace {
   position: relative;
   top: 20px;
-  left: 20px; // 원하는 위치에 맞춰 조정
+  left: 20px;
   display: flex;
   align-items: center;
   transition: display 0.6s ease;
@@ -70,4 +71,5 @@ nav{
   @include util.center();
   flex-direction: column;
   margin-top: 50px;
+  width: 100%;
 }

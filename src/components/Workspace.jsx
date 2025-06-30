@@ -1,21 +1,28 @@
-import React, {useCallback} from 'react';
+
 import PropTypes from 'prop-types';
+import {useDispatch, useSelector} from "react-redux";
+import {setWorkspaceInfo} from "../slices/WorkspaceInfoSlice";
+import '@styles/Task/Workspace.scss'
 
 const Workspace = ({ workspaceNo, workspaceName}) => {
+    const dispatch = useDispatch();
+    const selectWorkspaceName = useSelector(state => state.workspaceInfo.workspaceName);
+
     const workSpaceClick = (async (workspaceNo) => {
         try{
-            const res = await window.dbAPI.getStreams(workspaceNo);
-            res.result.forEach((doc) => {
-                window.ElectronAPI.logInfo(doc);
-            })
+            if (selectWorkspaceName === workspaceName) return
+            dispatch(setWorkspaceInfo({
+                no: workspaceNo,
+                name: workspaceName,
+            }));
         } catch (e) {
             window.ElectronAPI.logError("Workspace.jsx: streams load error, " + e);
         }
     });
 
     return (
-        <div className="workspace-item" onClick={() => workSpaceClick(workspaceNo)}>
-            <span className="workspace-name">{workspaceName}</span>
+        <div className={selectWorkspaceName === workspaceName ? "workspace-item-active" : "workspace-item"} onClick={() => workSpaceClick(workspaceNo)}>
+            {workspaceName}
         </div>
     );
 };

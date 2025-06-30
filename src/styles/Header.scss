@@ -1,0 +1,65 @@
+@use './util' as util;
+
+header{
+  top: 0;
+  width: 100vw;
+  height: 40px;
+  background-color: #5a5353;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.showing-info-box{
+  position: absolute;
+  right: 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
+.info-container{
+  display: flex;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+
+.info-name{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin: 0 10px 0 10px;
+  color: #35c6b5;
+}
+
+.workspace-name{
+  padding: 0 10px 0 10px;
+  height: 60%;
+  box-shadow: #333333 inset 1px 1px 1px 1px;
+  background: #ededed;
+}
+
+
+.dial-btn{
+  height: 60%;
+  aspect-ratio: 1/1;
+  @include util.center();
+  cursor: pointer;
+}
+
+.stream-names-container{
+  display: flex;
+  flex-direction: column;
+  height: 60%;
+  box-shadow: #333333 inset 1px 1px 1px 1px;
+  position: relative;
+  top: 10%;
+  padding: 0 0 10px 0;
+}
+
+.stream-name{
+  background: #ededed;
+  padding: 0 10px 0 10px;
+}

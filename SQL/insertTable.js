@@ -16,8 +16,29 @@ export async function insertWorkspace(workspaceName) {
                 logger.error('Insert Table.js: insertWorkspace error:', err);
                 resolve({ success: false, workspaceNo: null });
             } else {
-                logger.info('Insert Table.js: Workspace inserted, workspaceNo=', this.lastID);
+                logger.info('Insert Table.js: Workspace inserted, workspaceNo=' + this.lastID);
                 resolve({ success: true, workspaceNo: this.lastID });
+            }
+        });
+    });
+}
+/**
+ * insertStream: 스트림을 삽입
+ * @param {string} streamName
+ * @param {number} workspaceNo
+ * @returns {Promise<{success: boolean, streamNo: number|null}>}
+ */
+export async function insertStream(streamName, workspaceNo) {
+    const db = initDb();
+    return new Promise((resolve) => {
+        const sql = `INSERT INTO stream(streamName, workspaceNo) VALUES (?, ?);`;
+        db.run(sql, [streamName, workspaceNo], function(err) {
+            if (err) {
+                logger.error('Insert Table.js: insertStream error:', err);
+                resolve({ success: false, streamNo: null });
+            } else {
+                logger.info('Insert Table.js: Stream inserted, streamNo=', this.lastID);
+                resolve({ success: true, streamNo: this.lastID });
             }
         });
     });

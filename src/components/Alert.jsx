@@ -11,10 +11,6 @@ const Alert = () => {
         dispatch(setAlertMessage(""))
     }
 
-    useEffect(() => {
-        console.log("alertMessage", alertMessage)
-    })
-
     return (
         <>
             {
@@ -29,7 +25,8 @@ const Alert = () => {
                             </div>
                         </div>
                     </div>
-            }</>
+            }
+        </>
     );
 };
 
